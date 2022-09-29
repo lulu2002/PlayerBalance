@@ -1,0 +1,4 @@
+name: Playerbalance
+version: '${version}'
+main: me.lulu.playerbalance.PlayerBalance
+api-version: 1.19
