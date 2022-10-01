@@ -1,6 +1,10 @@
 package me.lulu.playerbalance.service
 
+import be.seeseemelk.mockbukkit.entity.PlayerMock
 import me.lulu.playerbalance.BukkitTestBase
+import me.lulu.playerbalance.Config
+import me.lulu.playerbalance.extension.color
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.util.UUID
@@ -22,7 +26,7 @@ internal class BalanceServiceTest : BukkitTestBase() {
         @Test
         fun playerExist_shouldReturnsBalance() {
             val uuid = UUID.randomUUID()
-            service.setBalance(uuid, 100)
+            service.setBalanceRaw(uuid, 100)
 
             val balance = service.getBalance(uuid)
             assertEquals(balance, 100)
@@ -30,4 +34,53 @@ internal class BalanceServiceTest : BukkitTestBase() {
 
     }
 
+    @Nested
+    inner class GiveBalance {
+
+        lateinit var player: PlayerMock
+        lateinit var target: PlayerMock
+
+        @BeforeEach
+        fun setup() {
+            player = server.addPlayer()
+            target = server.addPlayer()
+
+            service.setBalanceRaw(player.uniqueId, 100)
+        }
+
+        @Test
+        fun argIsNagiative_shouldFail() {
+            service.giveBalance(player, target, -1)
+
+            assertBalanceNotChange()
+            assertEquals(player.nextMessage(), Config.ARG_IS_NEGATIVE.color())
+        }
+
+        @Test
+        fun noEnoughBalance_shouldFail() {
+            service.giveBalance(player, target, 101)
+
+            assertBalanceNotChange()
+            assertEquals(player.nextMessage(), Config.NO_ENOUGH_BALANCE.color())
+        }
+
+        @Test
+        fun success_shouldRemoveFromAccountAndAddToTarget() {
+            service.giveBalance(player, target, 10)
+
+            assertEquals(service.getBalance(player), 90)
+            assertEquals(service.getBalance(target), 10)
+            assertEquals(
+                player.nextMessage(), Config.GIVE_SUCCESS.color()
+                    .replace("{amount}", "10")
+                    .replace("{target}", target.name)
+                    .replace("{balance}", "90")
+            )
+        }
+
+        fun assertBalanceNotChange() {
+            assertEquals(service.getBalance(player.uniqueId), 100)
+            assertEquals(service.getBalance(target.uniqueId), 0)
+        }
+    }
 }

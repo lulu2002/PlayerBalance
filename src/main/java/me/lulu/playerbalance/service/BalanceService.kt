@@ -1,5 +1,7 @@
 package me.lulu.playerbalance.service
 
+import me.lulu.playerbalance.Config
+import me.lulu.playerbalance.extension.msg
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -15,12 +17,33 @@ class BalanceService {
         return balances.getOrDefault(uuid, 0)
     }
 
-    fun setBalance(uuid: UUID, balance: Int) {
+    fun setBalanceRaw(uuid: UUID, balance: Int) {
         balances[uuid] = balance
     }
 
     fun giveBalance(player: Player, target: Player, amount: Int) {
-        TODO("Not yet implemented")
+        if (amount < 0) {
+            player.msg(Config.ARG_IS_NEGATIVE)
+            return
+        }
+
+        if (getBalance(player.uniqueId) < amount) {
+            player.msg(Config.NO_ENOUGH_BALANCE)
+            return
+        }
+
+        val playerNewBal = getBalance(player.uniqueId) - amount
+        val targetNewBal = getBalance(target.uniqueId) + amount
+
+        setBalanceRaw(player.uniqueId, playerNewBal)
+        setBalanceRaw(target.uniqueId, targetNewBal)
+
+        player.msg(
+            Config.GIVE_SUCCESS
+                .replace("{amount}", amount.toString())
+                .replace("{target}", target.name)
+                .replace("{balance}", playerNewBal.toString())
+        )
     }
 
 }

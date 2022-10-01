@@ -30,7 +30,7 @@ class BalanceCommandTest : BukkitTestBase() {
 
         player.performCommand("bal")
 
-        assertEquals(player.nextMessage(), Config.BALANCE_SELF.replace("{balance}", "0.0"))
+        assertEquals(player.nextMessage(), Config.BALANCE_SELF.replace("{balance}", "0"))
     }
 
     @Test
@@ -45,7 +45,7 @@ class BalanceCommandTest : BukkitTestBase() {
         assertEquals(
             player.nextMessage(), Config.BALANCE_OTHER
                 .replace("{player}", target.name)
-                .replace("{balance}", "0.0")
+                .replace("{balance}", "0")
         )
     }
 
