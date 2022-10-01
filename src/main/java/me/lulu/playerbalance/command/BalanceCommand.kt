@@ -17,10 +17,11 @@ class BalanceCommand(val service: BalanceService) : CommandExecutor {
 
         val target = args.getOrNull(0)
 
-        if (target == null) {
+        if (target == null)
             this.selfBalance(sender)
-        } else
+        else
             this.otherBalance(sender, target)
+
         return true
     }
 

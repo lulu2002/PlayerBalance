@@ -2,18 +2,30 @@ package me.lulu.playerbalance.commands
 
 import io.mockk.every
 import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import me.lulu.playerbalance.BukkitTestBase
 import me.lulu.playerbalance.Config
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class BalanceCommandTest : BukkitTestBase() {
 
+    @BeforeEach
+    fun setup() {
+        mockkObject(plugin.balanceService)
+    }
+
+    @AfterEach
+    fun unmock() {
+        unmockkObject(plugin.balanceService)
+    }
+
     @Test
     fun withoutArgs_shouldReturnSelfBalance() {
         val player = server.addPlayer()
 
-        mockkObject(plugin.balanceService)
         every { plugin.balanceService.getBalance(player) } returns 0.0
 
         player.performCommand("balance")
@@ -26,7 +38,6 @@ class BalanceCommandTest : BukkitTestBase() {
         val player = server.addPlayer()
         val target = server.addPlayer()
 
-        mockkObject(plugin.balanceService)
         every { plugin.balanceService.getBalance(target) } returns 0.0
 
         player.performCommand("balance ${target.name}")

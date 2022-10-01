@@ -11,7 +11,7 @@ open class BukkitTestBase {
     lateinit var plugin: PlayerBalance
 
     @BeforeEach
-    fun setup() {
+    fun setupServerAndPlugin() {
         server = MockBukkit.mock()
         plugin = MockBukkit.load(PlayerBalance::class.java)
     }
