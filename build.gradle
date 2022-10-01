@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.20'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 group = 'me.lulu'
@@ -15,11 +17,19 @@ repositories {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
+
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
 }
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation 'org.mongodb:mongodb-driver-sync:4.7.1'
+
+    testImplementation 'com.github.seeseemelk:MockBukkit-v1.19:2.29.0'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
+
 
 def targetJavaVersion = 17
 java {
@@ -43,5 +53,15 @@ processResources {
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
         expand props
+    }
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
