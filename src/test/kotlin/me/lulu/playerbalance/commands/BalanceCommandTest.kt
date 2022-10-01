@@ -1,31 +1,18 @@
 package me.lulu.playerbalance.commands
 
-import be.seeseemelk.mockbukkit.MockBukkit
-import be.seeseemelk.mockbukkit.ServerMock
-import me.lulu.playerbalance.PlayerBalance
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import me.lulu.playerbalance.BukkitTestBase
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
-class BalanceCommandTest {
-
-    private lateinit var server: ServerMock
-    private lateinit var plugin: PlayerBalance
-
-    @BeforeEach
-    fun setup() {
-        server = MockBukkit.mock()
-        plugin = MockBukkit.load(PlayerBalance::class.java)
-    }
-
-    @AfterEach
-    fun tearDown() {
-        MockBukkit.unmock()
-    }
+class BalanceCommandTest : BukkitTestBase() {
 
     @Test
-    fun testNothing() {
-        
+    fun withoutArgs_shouldReturnSelfBalance() {
+        val player = server.addPlayer()
+
+        player.performCommand("balance")
+
+        assertEquals(player.nextMessage(), "Your balance is 0")
     }
 
 }
