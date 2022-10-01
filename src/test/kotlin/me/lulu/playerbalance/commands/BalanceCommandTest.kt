@@ -26,9 +26,9 @@ class BalanceCommandTest : BukkitTestBase() {
     fun withoutArgs_shouldReturnSelfBalance() {
         val player = server.addPlayer()
 
-        every { plugin.balanceService.getBalance(player) } returns 0.0
+        every { plugin.balanceService.getBalance(player) } returns 0
 
-        player.performCommand("balance")
+        player.performCommand("bal")
 
         assertEquals(player.nextMessage(), Config.BALANCE_SELF.replace("{balance}", "0.0"))
     }
@@ -38,9 +38,9 @@ class BalanceCommandTest : BukkitTestBase() {
         val player = server.addPlayer()
         val target = server.addPlayer()
 
-        every { plugin.balanceService.getBalance(target) } returns 0.0
+        every { plugin.balanceService.getBalance(target) } returns 0
 
-        player.performCommand("balance ${target.name}")
+        player.performCommand("bal ${target.name}")
 
         assertEquals(
             player.nextMessage(), Config.BALANCE_OTHER

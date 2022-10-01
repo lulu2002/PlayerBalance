@@ -1,6 +1,7 @@
 package me.lulu.playerbalance.extension
 
 import org.bukkit.ChatColor
-import org.bukkit.entity.Player
+import org.bukkit.command.CommandSender
 
-fun Player.msg(message: String) = this.sendMessage(ChatColor.translateAlternateColorCodes('&', message))
+fun CommandSender.msg(message: String) = this.sendMessage(message.color())
+fun String.color() = ChatColor.translateAlternateColorCodes('&', this)

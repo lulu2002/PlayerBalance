@@ -1,6 +1,7 @@
 package me.lulu.playerbalance
 
 import me.lulu.playerbalance.command.BalanceCommand
+import me.lulu.playerbalance.command.GiveBalanceCommand
 import me.lulu.playerbalance.service.BalanceService
 import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.java.JavaPlugin
@@ -12,7 +13,9 @@ class PlayerBalance : JavaPlugin {
 
     override fun onEnable() {
         balanceService = BalanceService()
+
         getCommand("balance")!!.setExecutor(BalanceCommand(this.balanceService))
+        getCommand("givebal")!!.setExecutor(GiveBalanceCommand(this.balanceService))
     }
 
     override fun onDisable() {

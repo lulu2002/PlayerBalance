@@ -16,16 +16,16 @@ internal class BalanceServiceTest : BukkitTestBase() {
         @Test
         fun playerNotExist_shouldReturnsZero() {
             val balance = service.getBalance(UUID.randomUUID())
-            assertEquals(balance, 0.0)
+            assertEquals(balance, 0)
         }
 
         @Test
         fun playerExist_shouldReturnsBalance() {
             val uuid = UUID.randomUUID()
-            service.setBalance(uuid, 100.0)
+            service.setBalance(uuid, 100)
 
             val balance = service.getBalance(uuid)
-            assertEquals(balance, 100.0)
+            assertEquals(balance, 100)
         }
 
     }

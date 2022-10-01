@@ -7,5 +7,8 @@ author: Datou (JerryLin)
 commands:
   balance:
     description: Check your balance
-    usage: /balance
     aliases: [ bal ]
+
+  givebalance:
+    description: Give money to player
+    aliases: [ givebal ]
