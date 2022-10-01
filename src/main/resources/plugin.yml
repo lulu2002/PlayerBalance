@@ -1,4 +1,11 @@
-name: Playerbalance
+name: PlayerBalance
 version: '${version}'
 main: me.lulu.playerbalance.PlayerBalance
 api-version: 1.19
+author: Datou (JerryLin)
+
+commands:
+  balance:
+    description: Check your balance
+    usage: /balance
+    aliases: [ bal ]
