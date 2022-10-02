@@ -39,6 +39,11 @@ class BalanceService(
             return
         }
 
+        if (player.uniqueId == target.uniqueId) {
+            player.msg(Config.CANT_GIVE_SELF_BALANCE)
+            return
+        }
+
         val playerNewBal = getBalance(player.uniqueId) - amount
         val targetNewBal = getBalance(target.uniqueId) + amount
 
@@ -51,6 +56,7 @@ class BalanceService(
                 .replace("{target}", target.name)
                 .replace("{balance}", playerNewBal.toString())
         )
+
     }
 
     fun setBalance(sender: CommandSender, target: Player, value: Int) {
@@ -88,6 +94,8 @@ class BalanceService(
                 .replace("{amount}", randomValue.toString())
                 .replace("{balance}", newBalance.toString())
         )
+
+        cooldownModule.setCooldown(player, Config.EARN_CD)
     }
 
 }

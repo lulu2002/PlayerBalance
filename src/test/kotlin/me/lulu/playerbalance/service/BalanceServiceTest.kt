@@ -3,6 +3,7 @@ package me.lulu.playerbalance.service
 import be.seeseemelk.mockbukkit.entity.PlayerMock
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import me.lulu.playerbalance.BukkitTestBase
 import me.lulu.playerbalance.Config
 import me.lulu.playerbalance.extension.color
@@ -16,8 +17,8 @@ import kotlin.test.assertEquals
 
 internal class BalanceServiceTest : BukkitTestBase() {
 
-    private val cooldownModule: CooldownModule = mockk()
-    private val randomModule: RandomModule = mockk()
+    private val cooldownModule: CooldownModule = mockk(relaxed = true)
+    private val randomModule: RandomModule = mockk(relaxed = true)
     private val service = BalanceService(cooldownModule, randomModule)
 
     @Nested
@@ -71,11 +72,20 @@ internal class BalanceServiceTest : BukkitTestBase() {
         }
 
         @Test
+        fun giveSelf_shouldFail() {
+            service.giveBalance(player, player, 1)
+
+            assertBalanceNotChange()
+            assertEquals(player.nextMessage(), Config.CANT_GIVE_SELF_BALANCE.color())
+        }
+
+        @Test
         fun success_shouldRemoveFromAccountAndAddToTarget() {
             service.giveBalance(player, target, 10)
 
             assertEquals(service.getBalance(player), 90)
             assertEquals(service.getBalance(target), 10)
+
             assertEquals(
                 player.nextMessage(), Config.GIVE_SUCCESS.color()
                     .replace("{amount}", "10")
@@ -166,6 +176,7 @@ internal class BalanceServiceTest : BukkitTestBase() {
             )
 
             assertEquals(service.getBalance(player), 3)
+            verify { cooldownModule.setCooldown(player, Config.EARN_CD) }
         }
     }
 }

@@ -10,20 +10,20 @@ interface CooldownModule {
 
 class CooldownModuleImpl : CooldownModule {
 
-    private val cdMillis = mutableMapOf<Player, Long>()
+    private val cdUntil = mutableMapOf<Player, Long>()
 
     override fun getCooldown(player: Player): Long {
         val currentTime = System.currentTimeMillis()
-        val cdTime = cdMillis[player] ?: return currentTime
-        return currentTime - cdTime
+        val cdTime = cdUntil[player] ?: currentTime
+        return cdTime - currentTime
     }
 
     override fun isInCooldown(player: Player): Boolean {
-        return getCooldown(player) <= 0
+        return getCooldown(player) > 0
     }
 
     override fun setCooldown(player: Player, time: Long) {
-        cdMillis[player] = System.currentTimeMillis() + time
+        cdUntil[player] = System.currentTimeMillis() + time
     }
 
 }
