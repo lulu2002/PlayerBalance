@@ -49,6 +49,18 @@ java {
     }
 }
 
+shadowJar {
+    relocate("com.charleskorn", "me.lulu.playerbalance.lib.com.charleskorn")
+    relocate("com.mongodb", "me.lulu.playerbalance.lib.com.mongodb")
+    relocate("org.bson", "me.lulu.playerbalance.lib.org.bson")
+    relocate("org.intellij", "me.lulu.playerbalance.lib.org.intellij")
+    relocate("org.jetbrains", "me.lulu.playerbalance.lib.org.jetbrains")
+    relocate("org.snakeyaml", "me.lulu.playerbalance.lib.org.snakeyaml")
+
+    relocate("kotlin", "me.lulu.playerbalance.lib.kotlin")
+    relocate("kotlinx", "me.lulu.playerbalance.lib.kotlinx")
+}
+
 tasks.withType(JavaCompile).configureEach {
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release = targetJavaVersion
