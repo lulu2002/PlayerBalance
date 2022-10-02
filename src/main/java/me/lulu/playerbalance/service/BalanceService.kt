@@ -1,6 +1,7 @@
 package me.lulu.playerbalance.service
 
 import me.lulu.playerbalance.Config
+import me.lulu.playerbalance.extension.color
 import me.lulu.playerbalance.extension.msg
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -48,7 +49,18 @@ class BalanceService {
     }
 
     fun setBalance(sender: CommandSender, target: Player, value: Int) {
-        TODO("Not yet implemented")
+        if (!sender.hasPermission(Config.SET_BALANCE_PERMISSION)) {
+            sender.msg(Config.NO_PERMISSION)
+            return
+        }
+
+        if (value < 0) {
+            sender.msg(Config.ARG_IS_NEGATIVE)
+            return
+        }
+
+        setBalanceRaw(target.uniqueId, value)
+        sender.msg(Config.SET_BALANCE_SUCCESS.color())
     }
 
 }

@@ -83,4 +83,46 @@ internal class BalanceServiceTest : BukkitTestBase() {
             assertEquals(service.getBalance(target.uniqueId), 0)
         }
     }
+
+    @Nested
+    inner class SetBalance {
+
+        lateinit var player: PlayerMock
+        lateinit var target: PlayerMock
+
+        @BeforeEach
+        fun setup() {
+            player = server.addPlayer()
+            target = server.addPlayer()
+        }
+
+        @Test
+        fun noPermission_shouldFail() {
+            service.setBalance(player, target, 100)
+
+            assertEquals(service.getBalance(target), 0)
+            assertEquals(player.nextMessage(), Config.NO_PERMISSION.color())
+        }
+
+        @Test
+        fun valueIsNagative_shouldFail() {
+            player.addAttachment(plugin, Config.SET_BALANCE_PERMISSION, true)
+
+            service.setBalance(player, target, -1)
+
+            assertEquals(service.getBalance(target), 0)
+            assertEquals(player.nextMessage(), Config.ARG_IS_NEGATIVE.color())
+        }
+
+        @Test
+        fun success_shouldUpdateTargetBalance() {
+            player.addAttachment(plugin, Config.SET_BALANCE_PERMISSION, true)
+
+            service.setBalance(player, target, 100)
+
+            assertEquals(service.getBalance(target), 100)
+            assertEquals(player.nextMessage(), Config.SET_BALANCE_SUCCESS.color())
+        }
+
+    }
 }
