@@ -4,6 +4,7 @@ import be.seeseemelk.mockbukkit.entity.PlayerMock
 import io.mockk.mockk
 import io.mockk.verify
 import me.lulu.playerbalance.BukkitTestBase
+import me.lulu.playerbalance.Cfg
 import me.lulu.playerbalance.Config
 import me.lulu.playerbalance.extension.color
 import me.lulu.playerbalance.service.BalanceService
@@ -33,7 +34,7 @@ internal class SetBalanceCommandTest : BukkitTestBase() {
 
     @Test
     fun targetNotOnline_shouldFail() {
-        assertFail("setbalance target 100", Config.PLAYER_NOT_ONLINE.color().replace("{player}", "target"))
+        assertFail("setbalance target 100", Cfg.PLAYER_NOT_ONLINE.color().replace("{player}", "target"))
     }
 
     @Test
@@ -44,7 +45,7 @@ internal class SetBalanceCommandTest : BukkitTestBase() {
         verify { service.setBalance(sender, target, 100) }
     }
 
-    fun assertFail(input: String, failMessage: String = Config.SET_BALANCE_USAGE.color()) {
+    fun assertFail(input: String, failMessage: String = Cfg.SET_BALANCE_USAGE.color()) {
         execute(input)
         assertEquals(failMessage, sender.nextMessage())
     }

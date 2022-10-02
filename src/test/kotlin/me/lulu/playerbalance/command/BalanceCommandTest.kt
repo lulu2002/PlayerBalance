@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import me.lulu.playerbalance.BukkitTestBase
+import me.lulu.playerbalance.Cfg
 import me.lulu.playerbalance.Config
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -30,7 +31,7 @@ class BalanceCommandTest : BukkitTestBase() {
 
         player.performCommand("bal")
 
-        assertEquals(player.nextMessage(), Config.BALANCE_SELF.replace("{balance}", "0"))
+        assertEquals(player.nextMessage(), Cfg.BALANCE_SELF.replace("{balance}", "0"))
     }
 
     @Test
@@ -43,7 +44,7 @@ class BalanceCommandTest : BukkitTestBase() {
         player.performCommand("bal ${target.name}")
 
         assertEquals(
-            player.nextMessage(), Config.BALANCE_OTHER
+            player.nextMessage(), Cfg.BALANCE_OTHER
                 .replace("{player}", target.name)
                 .replace("{balance}", "0")
         )

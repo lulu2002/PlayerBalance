@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import me.lulu.playerbalance.BukkitTestBase
+import me.lulu.playerbalance.Cfg
 import me.lulu.playerbalance.Config
 import me.lulu.playerbalance.command.GiveBalanceCommand
 import me.lulu.playerbalance.extension.color
@@ -42,7 +43,7 @@ class GiveBalanceCommandTest : BukkitTestBase() {
 
     fun assertFail(sender: PlayerMock, command: String) {
         sender.performCommand(command)
-        assertEquals(Config.GIVE_BALANCE_USAGE.color(), sender.nextMessage())
+        assertEquals(Cfg.GIVE_BALANCE_USAGE.color(), sender.nextMessage())
     }
 
 //    @Test
@@ -51,7 +52,7 @@ class GiveBalanceCommandTest : BukkitTestBase() {
 //
 //        sender.performCommand( "givebalance target 100")
 //
-//        assertEquals(sender.nextMessage(), Config.PLAYER_NOT_ONLINE.replace("{player}", "target"))
+//        assertEquals(sender.nextMessage(), Cfg.PLAYER_NOT_ONLINE.replace("{player}", "target"))
 //    }
 //
 

@@ -1,6 +1,7 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.7.20'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.21'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.21'
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
@@ -19,11 +20,15 @@ repositories {
     }
 
     maven { url 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "com.charleskorn.kaml:kaml:0.48.0"
+    implementation 'org.mongodb:mongodb-driver-sync:4.7.1'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
 
     testImplementation 'com.github.seeseemelk:MockBukkit-v1.19:2.29.0'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"

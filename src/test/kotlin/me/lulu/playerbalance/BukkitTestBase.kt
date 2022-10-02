@@ -12,6 +12,8 @@ open class BukkitTestBase {
 
     @BeforeEach
     fun setupServerAndPlugin() {
+        Testing.TESTING = true
+
         server = MockBukkit.mock()
         plugin = MockBukkit.load(PlayerBalance::class.java)
     }

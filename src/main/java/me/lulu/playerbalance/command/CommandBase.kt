@@ -1,5 +1,6 @@
 package me.lulu.playerbalance.command
 
+import me.lulu.playerbalance.Cfg
 import me.lulu.playerbalance.Config
 import me.lulu.playerbalance.extension.msg
 import org.bukkit.command.Command
@@ -38,7 +39,7 @@ abstract class CommandBase : CommandExecutor {
     }
 
     protected fun getPlayer(): Player {
-        filter(sender is Player, Config.PLAYER_ONLY)
+        filter(sender is Player, Cfg.PLAYER_ONLY)
 
         return sender as Player
     }

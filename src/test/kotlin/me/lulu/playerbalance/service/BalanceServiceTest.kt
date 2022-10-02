@@ -1,11 +1,12 @@
 package me.lulu.playerbalance.service
 
 import be.seeseemelk.mockbukkit.entity.PlayerMock
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import me.lulu.playerbalance.BukkitTestBase
-import me.lulu.playerbalance.Config
+import me.lulu.playerbalance.Cfg
 import me.lulu.playerbalance.extension.color
 import me.lulu.playerbalance.module.CooldownModule
 import me.lulu.playerbalance.module.DatabaseModule
@@ -13,7 +14,7 @@ import me.lulu.playerbalance.module.RandomModule
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.util.UUID
+import java.util.*
 import kotlin.test.assertEquals
 
 internal class BalanceServiceTest : BukkitTestBase() {
@@ -62,7 +63,7 @@ internal class BalanceServiceTest : BukkitTestBase() {
             service.giveBalance(player, target, -1)
 
             assertBalanceNotChange()
-            assertEquals(player.nextMessage(), Config.ARG_IS_NEGATIVE.color())
+            assertEquals(player.nextMessage(), Cfg.ARG_IS_NEGATIVE.color())
         }
 
         @Test
@@ -70,7 +71,7 @@ internal class BalanceServiceTest : BukkitTestBase() {
             service.giveBalance(player, target, 101)
 
             assertBalanceNotChange()
-            assertEquals(player.nextMessage(), Config.NO_ENOUGH_BALANCE.color())
+            assertEquals(player.nextMessage(), Cfg.NO_ENOUGH_BALANCE.color())
         }
 
         @Test
@@ -78,7 +79,7 @@ internal class BalanceServiceTest : BukkitTestBase() {
             service.giveBalance(player, player, 1)
 
             assertBalanceNotChange()
-            assertEquals(player.nextMessage(), Config.CANT_GIVE_SELF_BALANCE.color())
+            assertEquals(player.nextMessage(), Cfg.CANT_GIVE_SELF_BALANCE.color())
         }
 
         @Test
@@ -89,7 +90,7 @@ internal class BalanceServiceTest : BukkitTestBase() {
             assertEquals(service.getBalance(target), 10)
 
             assertEquals(
-                player.nextMessage(), Config.GIVE_SUCCESS.color()
+                player.nextMessage(), Cfg.GIVE_SUCCESS.color()
                     .replace("{amount}", "10")
                     .replace("{target}", target.name)
                     .replace("{balance}", "90")
@@ -119,27 +120,27 @@ internal class BalanceServiceTest : BukkitTestBase() {
             service.setBalance(player, target, 100)
 
             assertEquals(service.getBalance(target), 0)
-            assertEquals(player.nextMessage(), Config.NO_PERMISSION.color())
+            assertEquals(player.nextMessage(), Cfg.NO_PERMISSION.color())
         }
 
         @Test
         fun valueIsNagative_shouldFail() {
-            player.addAttachment(plugin, Config.SET_BALANCE_PERMISSION, true)
+            player.addAttachment(plugin, Cfg.SET_BALANCE_PERMISSION, true)
 
             service.setBalance(player, target, -1)
 
             assertEquals(service.getBalance(target), 0)
-            assertEquals(player.nextMessage(), Config.ARG_IS_NEGATIVE.color())
+            assertEquals(player.nextMessage(), Cfg.ARG_IS_NEGATIVE.color())
         }
 
         @Test
         fun success_shouldUpdateTargetBalance() {
-            player.addAttachment(plugin, Config.SET_BALANCE_PERMISSION, true)
+            player.addAttachment(plugin, Cfg.SET_BALANCE_PERMISSION, true)
 
             service.setBalance(player, target, 100)
 
             assertEquals(service.getBalance(target), 100)
-            assertEquals(player.nextMessage(), Config.SET_BALANCE_SUCCESS.color())
+            assertEquals(player.nextMessage(), Cfg.SET_BALANCE_SUCCESS.color())
         }
 
     }
@@ -157,7 +158,7 @@ internal class BalanceServiceTest : BukkitTestBase() {
 
             service.earnRandomBalance(player)
 
-            assertEquals(player.nextMessage(), Config.EARN_COOLDOWN.color().replace("{seconds}", "10"))
+            assertEquals(player.nextMessage(), Cfg.EARN_COOLDOWN.color().replace("{seconds}", "10"))
             assertEquals(service.getBalance(player), 0)
         }
 
@@ -172,13 +173,13 @@ internal class BalanceServiceTest : BukkitTestBase() {
 
             assertEquals(
                 player.nextMessage(),
-                Config.EARN_SUCCESS.color()
+                Cfg.EARN_SUCCESS.color()
                     .replace("{amount}", "3")
                     .replace("{balance}", "3")
             )
 
             assertEquals(service.getBalance(player), 3)
-            verify { cooldownModule.setCooldown(player, Config.EARN_CD) }
+            verify { cooldownModule.setCooldown(player, Cfg.EARN_CD) }
         }
     }
 
@@ -208,7 +209,7 @@ internal class BalanceServiceTest : BukkitTestBase() {
 
             service.saveBalanceData(player.uniqueId)
 
-            verify { databaseModule.savePlayerBalance(player.uniqueId, 10) }
+            coVerify { databaseModule.savePlayerBalance(player.uniqueId, 10) }
         }
 
     }

@@ -1,5 +1,7 @@
 package me.lulu.playerbalance.listener
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import me.lulu.playerbalance.service.BalanceService
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -16,7 +18,7 @@ class JoinQuitListener(private val balanceService: BalanceService) : Listener {
 
     @EventHandler
     fun onPlayerQuit(e: PlayerQuitEvent) {
-        this.balanceService.saveBalanceData(e.player.uniqueId)
+        balanceService.saveBalanceData(e.player.uniqueId)
     }
 
 }

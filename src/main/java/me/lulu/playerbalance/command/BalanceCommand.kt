@@ -1,5 +1,6 @@
 package me.lulu.playerbalance.command
 
+import me.lulu.playerbalance.Cfg
 import me.lulu.playerbalance.Config
 import me.lulu.playerbalance.extension.msg
 import me.lulu.playerbalance.service.BalanceService
@@ -26,7 +27,7 @@ class BalanceCommand(val service: BalanceService) : CommandBase() {
 
         Bukkit.getPlayer(target)?.let {
             player.msg(
-                Config.BALANCE_OTHER
+                Cfg.BALANCE_OTHER
                     .replace("{player}", it.name)
                     .replace("{balance}", service.getBalance(it).toString())
             )
@@ -34,7 +35,7 @@ class BalanceCommand(val service: BalanceService) : CommandBase() {
     }
 
     private fun selfBalance(player: Player) {
-        player.msg(Config.BALANCE_SELF.replace("{balance}", service.getBalance(player).toString()))
+        player.msg(Cfg.BALANCE_SELF.replace("{balance}", service.getBalance(player).toString()))
     }
 
 }

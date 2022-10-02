@@ -1,6 +1,7 @@
 package me.lulu.playerbalance.listener
 
 import be.seeseemelk.mockbukkit.entity.PlayerMock
+import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
 import me.lulu.playerbalance.BukkitTestBase
@@ -30,7 +31,7 @@ internal class JoinQuitListenerTest : BukkitTestBase() {
 
         joinQuitListener.onPlayerQuit(PlayerQuitEvent(player,""))
 
-        verify { balanceService.saveBalanceData(player.uniqueId) }
+        coVerify { balanceService.saveBalanceData(player.uniqueId) }
     }
 
 }

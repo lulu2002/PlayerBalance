@@ -1,6 +1,9 @@
 package me.lulu.playerbalance.service
 
-import me.lulu.playerbalance.Config
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import me.lulu.playerbalance.Cfg
 import me.lulu.playerbalance.extension.color
 import me.lulu.playerbalance.extension.msg
 import me.lulu.playerbalance.module.CooldownModule
@@ -9,6 +12,9 @@ import me.lulu.playerbalance.module.RandomModule
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.*
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
+
 
 class BalanceService(
     private val cooldownModule: CooldownModule,
@@ -17,6 +23,7 @@ class BalanceService(
 ) {
 
     private val balances = mutableMapOf<UUID, Int>()
+    private val executor = Executors.newSingleThreadExecutor()
 
     fun getBalance(player: Player): Int {
         return getBalance(player.uniqueId)
@@ -32,17 +39,17 @@ class BalanceService(
 
     fun giveBalance(player: Player, target: Player, amount: Int) {
         if (amount < 0) {
-            player.msg(Config.ARG_IS_NEGATIVE)
+            player.msg(Cfg.ARG_IS_NEGATIVE)
             return
         }
 
         if (getBalance(player.uniqueId) < amount) {
-            player.msg(Config.NO_ENOUGH_BALANCE)
+            player.msg(Cfg.NO_ENOUGH_BALANCE)
             return
         }
 
         if (player.uniqueId == target.uniqueId) {
-            player.msg(Config.CANT_GIVE_SELF_BALANCE)
+            player.msg(Cfg.CANT_GIVE_SELF_BALANCE)
             return
         }
 
@@ -53,7 +60,7 @@ class BalanceService(
         setBalanceRaw(target.uniqueId, targetNewBal)
 
         player.msg(
-            Config.GIVE_SUCCESS
+            Cfg.GIVE_SUCCESS
                 .replace("{amount}", amount.toString())
                 .replace("{target}", target.name)
                 .replace("{balance}", playerNewBal.toString())
@@ -62,24 +69,24 @@ class BalanceService(
     }
 
     fun setBalance(sender: CommandSender, target: Player, value: Int) {
-        if (!sender.hasPermission(Config.SET_BALANCE_PERMISSION)) {
-            sender.msg(Config.NO_PERMISSION)
+        if (!sender.hasPermission(Cfg.SET_BALANCE_PERMISSION)) {
+            sender.msg(Cfg.NO_PERMISSION)
             return
         }
 
         if (value < 0) {
-            sender.msg(Config.ARG_IS_NEGATIVE)
+            sender.msg(Cfg.ARG_IS_NEGATIVE)
             return
         }
 
         setBalanceRaw(target.uniqueId, value)
-        sender.msg(Config.SET_BALANCE_SUCCESS.color())
+        sender.msg(Cfg.SET_BALANCE_SUCCESS.color())
     }
 
     fun earnRandomBalance(player: Player) {
         if (cooldownModule.isInCooldown(player)) {
             player.msg(
-                Config.EARN_COOLDOWN.replace(
+                Cfg.EARN_COOLDOWN.replace(
                     "{seconds}",
                     (cooldownModule.getCooldown(player) / 1000).toString()
                 )
@@ -87,17 +94,17 @@ class BalanceService(
             return
         }
 
-        val randomValue = this.randomModule.randomValue(Config.EARN_MIN, Config.EARN_MAX)
+        val randomValue = this.randomModule.randomValue(Cfg.EARN_MIN, Cfg.EARN_MAX)
         val newBalance = getBalance(player.uniqueId) + randomValue
         this.setBalanceRaw(player.uniqueId, newBalance)
 
         player.msg(
-            Config.EARN_SUCCESS
+            Cfg.EARN_SUCCESS
                 .replace("{amount}", randomValue.toString())
                 .replace("{balance}", newBalance.toString())
         )
 
-        cooldownModule.setCooldown(player, Config.EARN_CD)
+        cooldownModule.setCooldown(player, Cfg.EARN_CD)
     }
 
     fun loadBalanceData(uuid: UUID) {
@@ -106,8 +113,10 @@ class BalanceService(
     }
 
     fun saveBalanceData(uuid: UUID) {
-        this.databaseModule.savePlayerBalance(uuid, getBalance(uuid))
-        this.balances.remove(uuid)
+        GlobalScope.launch {
+            databaseModule.savePlayerBalance(uuid, getBalance(uuid))
+            balances.remove(uuid)
+        }
     }
 
 }
