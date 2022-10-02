@@ -1,0 +1,29 @@
+version: '3.1'
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      - backend
+
+  server:
+    image: dev-server:latest
+    container_name: server
+    restart: always
+    ports:
+      - 25565:25565
+    depends_on:
+      - mongodb
+    networks:
+      - backend
+    environment:
+      EULA: true
+      TYPE: PAPER
+
+networks:
+  backend:

@@ -2,7 +2,6 @@ package me.lulu.playerbalance.service
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import me.lulu.playerbalance.Cfg
 import me.lulu.playerbalance.extension.color
 import me.lulu.playerbalance.extension.msg
@@ -13,7 +12,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.*
 import java.util.concurrent.Executors
-import java.util.concurrent.Future
 
 
 class BalanceService(
@@ -80,7 +78,11 @@ class BalanceService(
         }
 
         setBalanceRaw(target.uniqueId, value)
-        sender.msg(Cfg.SET_BALANCE_SUCCESS.color())
+        sender.msg(
+            Cfg.SET_BALANCE_SUCCESS.color()
+                .replace("{player}", target.name)
+                .replace("{amount}", value.toString())
+        )
     }
 
     fun earnRandomBalance(player: Player) {

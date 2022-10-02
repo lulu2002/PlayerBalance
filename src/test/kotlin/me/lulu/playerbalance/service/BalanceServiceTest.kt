@@ -140,7 +140,11 @@ internal class BalanceServiceTest : BukkitTestBase() {
             service.setBalance(player, target, 100)
 
             assertEquals(service.getBalance(target), 100)
-            assertEquals(player.nextMessage(), Cfg.SET_BALANCE_SUCCESS.color())
+            assertEquals(
+                player.nextMessage(), Cfg.SET_BALANCE_SUCCESS.color()
+                    .replace("{player}", target.name)
+                    .replace("{amount}", "100")
+            )
         }
 
     }

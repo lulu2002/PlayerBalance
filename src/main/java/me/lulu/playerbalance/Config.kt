@@ -1,7 +1,6 @@
 package me.lulu.playerbalance
 
 import kotlinx.serialization.Serializable
-import java.util.StringJoiner
 
 @Serializable
 data class Config(
@@ -29,7 +28,7 @@ data class Config(
     val EARN_MAX: Int = 5,
     val EARN_CD: Long = 60 * 1000,
 
-    var MONGO_HOST: String = "localhost",
+    var MONGO_HOST: String = "mongodb",
     var MONGO_PORT: String = "27017",
     var MONGO_DB: String = "playerbalance",
     var MONGO_COLLECTION: String = "playerbalance",

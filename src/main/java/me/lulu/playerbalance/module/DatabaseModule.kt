@@ -23,7 +23,7 @@ class MongoDatabaseModule : DatabaseModule {
             .credential(
                 MongoCredential.createCredential(
                     Cfg.MONGO_USER,
-                    Cfg.MONGO_DB,
+                    "admin",
                     Cfg.MONGO_PASSWORD.toCharArray()
                 )
             )
