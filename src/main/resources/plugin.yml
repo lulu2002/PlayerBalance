@@ -12,3 +12,11 @@ commands:
   givebalance:
     description: Give money to player
     aliases: [ givebal ]
+
+  setbalance:
+    description: Set player's balance
+    aliases: [ setbal ]
+
+  earn:
+    description: Earn money
+    aliases: [ earnmoney ]

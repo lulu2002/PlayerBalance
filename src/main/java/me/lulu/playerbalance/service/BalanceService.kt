@@ -63,4 +63,8 @@ class BalanceService {
         sender.msg(Config.SET_BALANCE_SUCCESS.color())
     }
 
+    fun earnRandomBalance(player: Player) {
+        TODO("Not yet implemented")
+    }
+
 }
