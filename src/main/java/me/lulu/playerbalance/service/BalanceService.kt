@@ -4,6 +4,7 @@ import me.lulu.playerbalance.Config
 import me.lulu.playerbalance.extension.color
 import me.lulu.playerbalance.extension.msg
 import me.lulu.playerbalance.module.CooldownModule
+import me.lulu.playerbalance.module.DatabaseModule
 import me.lulu.playerbalance.module.RandomModule
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -11,7 +12,8 @@ import java.util.*
 
 class BalanceService(
     private val cooldownModule: CooldownModule,
-    private val randomModule: RandomModule
+    private val randomModule: RandomModule,
+    private val databaseModule: DatabaseModule
 ) {
 
     private val balances = mutableMapOf<UUID, Int>()
@@ -96,6 +98,16 @@ class BalanceService(
         )
 
         cooldownModule.setCooldown(player, Config.EARN_CD)
+    }
+
+    fun loadBalanceData(uuid: UUID) {
+        val balance = this.databaseModule.loadPlayerBalance(uuid)
+        setBalanceRaw(uuid, balance)
+    }
+
+    fun saveBalanceData(uuid: UUID) {
+        this.databaseModule.savePlayerBalance(uuid, getBalance(uuid))
+        this.balances.remove(uuid)
     }
 
 }

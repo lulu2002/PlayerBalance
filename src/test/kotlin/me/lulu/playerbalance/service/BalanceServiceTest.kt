@@ -8,6 +8,7 @@ import me.lulu.playerbalance.BukkitTestBase
 import me.lulu.playerbalance.Config
 import me.lulu.playerbalance.extension.color
 import me.lulu.playerbalance.module.CooldownModule
+import me.lulu.playerbalance.module.DatabaseModule
 import me.lulu.playerbalance.module.RandomModule
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -19,7 +20,8 @@ internal class BalanceServiceTest : BukkitTestBase() {
 
     private val cooldownModule: CooldownModule = mockk(relaxed = true)
     private val randomModule: RandomModule = mockk(relaxed = true)
-    private val service = BalanceService(cooldownModule, randomModule)
+    private val databaseModule: DatabaseModule = mockk(relaxed = true)
+    private val service = BalanceService(cooldownModule, randomModule, databaseModule)
 
     @Nested
     inner class GetBalance {
@@ -178,5 +180,36 @@ internal class BalanceServiceTest : BukkitTestBase() {
             assertEquals(service.getBalance(player), 3)
             verify { cooldownModule.setCooldown(player, Config.EARN_CD) }
         }
+    }
+
+
+    @Nested
+    inner class LoadBalance {
+
+        @Test
+        fun shouldLoadFromDatabaseModule() {
+            val player = server.addPlayer()
+            every { databaseModule.loadPlayerBalance(player.uniqueId) } returns 10
+
+            service.loadBalanceData(player.uniqueId)
+
+            assertEquals(service.getBalance(player), 10)
+        }
+
+    }
+
+    @Nested
+    inner class SaveBalance {
+
+        @Test
+        fun shouldSaveToDatabaseModule() {
+            val player = server.addPlayer()
+            service.setBalanceRaw(player.uniqueId, 10)
+
+            service.saveBalanceData(player.uniqueId)
+
+            verify { databaseModule.savePlayerBalance(player.uniqueId, 10) }
+        }
+
     }
 }
