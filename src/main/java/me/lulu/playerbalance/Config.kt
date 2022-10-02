@@ -7,6 +7,7 @@ object Config {
     val PLAYER_NOT_ONLINE = "{player} is not online."
 
     val GIVE_BALANCE_USAGE = "&cUsage: /givebalance <player> <amount>"
+    val SET_BALANCE_USAGE = "&cUsage: /setbalance <player> <amount>"
 
     val NO_ENOUGH_BALANCE = "&cYou don't have enough money!"
     val ARG_IS_NEGATIVE = "Balance should not be negative."

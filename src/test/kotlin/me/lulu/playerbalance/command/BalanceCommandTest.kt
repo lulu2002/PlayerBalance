@@ -1,4 +1,4 @@
-package me.lulu.playerbalance.commands
+package me.lulu.playerbalance.command
 
 import io.mockk.every
 import io.mockk.mockkObject

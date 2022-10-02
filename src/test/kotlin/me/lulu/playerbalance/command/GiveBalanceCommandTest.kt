@@ -1,4 +1,4 @@
-package me.lulu.playerbalance.commands
+package me.lulu.playerbalance.command
 
 import be.seeseemelk.mockbukkit.entity.PlayerMock
 import io.mockk.mockk

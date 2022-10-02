@@ -78,7 +78,7 @@ internal class BalanceServiceTest : BukkitTestBase() {
             )
         }
 
-        fun assertBalanceNotChange() {
+        private fun assertBalanceNotChange() {
             assertEquals(service.getBalance(player.uniqueId), 100)
             assertEquals(service.getBalance(target.uniqueId), 0)
         }

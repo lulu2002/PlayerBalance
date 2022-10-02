@@ -2,6 +2,7 @@ package me.lulu.playerbalance.service
 
 import me.lulu.playerbalance.Config
 import me.lulu.playerbalance.extension.msg
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -44,6 +45,10 @@ class BalanceService {
                 .replace("{target}", target.name)
                 .replace("{balance}", playerNewBal.toString())
         )
+    }
+
+    fun setBalance(sender: CommandSender, target: Player, value: Int) {
+        TODO("Not yet implemented")
     }
 
 }

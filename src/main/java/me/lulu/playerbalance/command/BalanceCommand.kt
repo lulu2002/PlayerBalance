@@ -9,20 +9,17 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class BalanceCommand(val service: BalanceService) : CommandExecutor {
+class BalanceCommand(val service: BalanceService) : CommandBase() {
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (sender !is Player)
-            return false
-
+    override fun command(sender: CommandSender, label: String, args: Array<out String>) {
+        val player = getPlayer()
         val target = args.getOrNull(0)
 
         if (target == null)
-            this.selfBalance(sender)
+            this.selfBalance(player)
         else
-            this.otherBalance(sender, target)
+            this.otherBalance(player, target)
 
-        return true
     }
 
     private fun otherBalance(player: Player, target: String) {
