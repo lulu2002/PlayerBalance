@@ -4,6 +4,9 @@ import me.lulu.playerbalance.command.BalanceCommand
 import me.lulu.playerbalance.command.EarnCommand
 import me.lulu.playerbalance.command.GiveBalanceCommand
 import me.lulu.playerbalance.command.SetBalanceCommand
+import me.lulu.playerbalance.module.CooldownModuleImpl
+import me.lulu.playerbalance.module.RandomModule
+import me.lulu.playerbalance.module.RandomModuleImpl
 import me.lulu.playerbalance.service.BalanceService
 import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.java.JavaPlugin
@@ -14,7 +17,11 @@ class PlayerBalance : JavaPlugin {
     lateinit var balanceService: BalanceService
 
     override fun onEnable() {
-        balanceService = BalanceService()
+
+        balanceService = BalanceService(
+            cooldownModule = CooldownModuleImpl(),
+            randomModule = RandomModuleImpl()
+        )
 
         getCommand("balance")!!.setExecutor(BalanceCommand(this.balanceService))
         getCommand("givebal")!!.setExecutor(GiveBalanceCommand(this.balanceService))

@@ -3,11 +3,16 @@ package me.lulu.playerbalance.service
 import me.lulu.playerbalance.Config
 import me.lulu.playerbalance.extension.color
 import me.lulu.playerbalance.extension.msg
+import me.lulu.playerbalance.module.CooldownModule
+import me.lulu.playerbalance.module.RandomModule
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.*
 
-class BalanceService {
+class BalanceService(
+    private val cooldownModule: CooldownModule,
+    private val randomModule: RandomModule
+) {
 
     private val balances = mutableMapOf<UUID, Int>()
 
@@ -64,7 +69,25 @@ class BalanceService {
     }
 
     fun earnRandomBalance(player: Player) {
-        TODO("Not yet implemented")
+        if (cooldownModule.isInCooldown(player)) {
+            player.msg(
+                Config.EARN_COOLDOWN.replace(
+                    "{seconds}",
+                    (cooldownModule.getCooldown(player) / 1000).toString()
+                )
+            )
+            return
+        }
+
+        val randomValue = this.randomModule.randomValue(Config.EARN_MIN, Config.EARN_MAX)
+        val newBalance = getBalance(player.uniqueId) + randomValue
+        this.setBalanceRaw(player.uniqueId, newBalance)
+
+        player.msg(
+            Config.EARN_SUCCESS
+                .replace("{amount}", randomValue.toString())
+                .replace("{balance}", newBalance.toString())
+        )
     }
 
 }

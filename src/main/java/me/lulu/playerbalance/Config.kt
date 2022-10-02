@@ -14,7 +14,12 @@ object Config {
     val NO_PERMISSION = "&cYou don't have permission to do that."
     val NO_ENOUGH_BALANCE = "&cYou don't have enough money!"
     val ARG_IS_NEGATIVE = "Balance should not be negative."
+    val EARN_COOLDOWN = "&cYou have to wait {seconds} seconds to earn money again."
 
     val GIVE_SUCCESS = "Successfully give {player} {amount} balance. Now you have {balance} balance."
     val SET_BALANCE_SUCCESS = "Successfully set {player}'s balance to {amount}."
+    val EARN_SUCCESS = "You earned {amount} balance. Now you have {balance} balance."
+
+    val EARN_MIN: Int = 1
+    val EARN_MAX: Int = 5
 }

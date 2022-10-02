@@ -1,9 +1,13 @@
 package me.lulu.playerbalance.service
 
 import be.seeseemelk.mockbukkit.entity.PlayerMock
+import io.mockk.every
+import io.mockk.mockk
 import me.lulu.playerbalance.BukkitTestBase
 import me.lulu.playerbalance.Config
 import me.lulu.playerbalance.extension.color
+import me.lulu.playerbalance.module.CooldownModule
+import me.lulu.playerbalance.module.RandomModule
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -12,7 +16,9 @@ import kotlin.test.assertEquals
 
 internal class BalanceServiceTest : BukkitTestBase() {
 
-    private val service = BalanceService()
+    private val cooldownModule: CooldownModule = mockk()
+    private val randomModule: RandomModule = mockk()
+    private val service = BalanceService(cooldownModule, randomModule)
 
     @Nested
     inner class GetBalance {
@@ -124,5 +130,42 @@ internal class BalanceServiceTest : BukkitTestBase() {
             assertEquals(player.nextMessage(), Config.SET_BALANCE_SUCCESS.color())
         }
 
+    }
+
+
+    @Nested
+    inner class EarnBalance {
+
+        @Test
+        fun playerIsInCooldown_shouldFail() {
+            val player = server.addPlayer()
+
+            every { cooldownModule.isInCooldown(player) } returns true
+            every { cooldownModule.getCooldown(player) } returns 10000
+
+            service.earnRandomBalance(player)
+
+            assertEquals(player.nextMessage(), Config.EARN_COOLDOWN.color().replace("{seconds}", "10"))
+            assertEquals(service.getBalance(player), 0)
+        }
+
+        @Test
+        fun playerIsNotInCooldown_shouldEarn() {
+            val player = server.addPlayer()
+
+            every { cooldownModule.isInCooldown(player) } returns false
+            every { randomModule.randomValue(any(), any()) } returns 3
+
+            service.earnRandomBalance(player)
+
+            assertEquals(
+                player.nextMessage(),
+                Config.EARN_SUCCESS.color()
+                    .replace("{amount}", "3")
+                    .replace("{balance}", "3")
+            )
+
+            assertEquals(service.getBalance(player), 3)
+        }
     }
 }
